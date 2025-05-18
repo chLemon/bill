@@ -1,22 +1,18 @@
 from TradeRecord import TradeRecord
 from pathlib import Path
+from datetime import datetime
 
-
-def read_ali_bill(dir_path: Path):
-    """
-    读取某个目录下的所有支付宝账单文件
-    """
-    files = [file for file in Path(dir_path).iterdir() if file.is_file()]
-    trade_record_list = []
-    for file in files:
-        trade_record_list.extend(read_wx_file(file))
-    return trade_record_list
-
+BILL_TYPE = "支付宝"
 
 def read_ali_file(file):
     """
     读取支付宝账单文件
+    return: 账单记录列表，账单时间区间
     """
     with open(file, 'r', encoding='gb2312') as f:
-        trade_record_str_list = f.readlines()[25:]
-    return [TradeRecord.from_str(trade_record_str) for trade_record_str in trade_record_str_list]
+        lines = f.readlines()
+        trade_record_str_list = lines[25:]
+        time = lines[4]
+        start_time = datetime.strptime(time[6:25], "%Y-%m-%d %H:%M:%S")
+        end_time = datetime.strptime(time[36:55], "%Y-%m-%d %H:%M:%S")
+    return [TradeRecord.from_ali_str(trade_record_str, BILL_TYPE) for trade_record_str in trade_record_str_list], start_time, end_time
