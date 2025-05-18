@@ -1,56 +1,4 @@
-from pathlib import Path
-from datetime import datetime, timedelta
-
-
-def read_trade_records(read_func, dir_path: Path):
-    """
-    读取某个目录下的所有账单文件
-    :param read_func: 读取函数
-    :param dir_path: 目录路径
-    :return: 账单记录列表，账单时间区间
-    """
-    files = [file for file in Path(dir_path).iterdir() if file.is_file()]
-    trade_record_list = []
-    time_list = []
-    distinct_set = set()
-    for file in files:
-        file_trade_record_list, start_time, end_time = read_func(file)
-        distinct_merge(trade_record_list, distinct_set, file_trade_record_list)
-        time_list.append((start_time, end_time))
-    time_list = merge_time_range(time_list)
-    return trade_record_list, time_list
-
-def distinct_merge(all_list, distinct_set, new_list):
-    for item in new_list:
-        if item.trade_no not in distinct_set:
-            all_list.append(item)
-            distinct_set.add(item.trade_no)
-
-def merge_time_range(time_list):
-    """
-    合并时间区间
-    :param time_list: 时间区间列表
-    :return: 合并后的时间区间列表
-    """
-    if not time_list:
-        return []
-    time_list.sort(key=lambda x: x[0])
-    merged_time_list = [time_list[0]]
-    for start_time, end_time in time_list[1:]:
-        last_start, last_end = merged_time_list[-1]
-        if time_consistency_check(last_end, start_time):
-            merged_time_list[-1] = (last_start, max(last_end, end_time))
-        else:
-            merged_time_list.append((start_time, end_time))
-    return merged_time_list
-
-
-def time_consistency_check(last_end: datetime, next_start: datetime):
-    if last_end >= next_start:
-        return True
-    if last_end.hour == 23 and last_end.minute == 59 and last_end.second == 59 and last_end + timedelta(seconds=1) == next_start:
-        return True
-    return False
+from datetime import datetime
 
 
 class TradeRecord:
@@ -58,7 +6,7 @@ class TradeRecord:
     交易记录类
 
     Attributes:
-        trade_time (str): 交易时间
+        trade_time (datetime): 交易时间
         trade_type (str): 交易类型
         trade_target (str): 交易对方
         trade_target_account (str): 交易对方账号，可选
@@ -91,19 +39,20 @@ class TradeRecord:
         bill_type: str,
         trade_target_account: str = None,
     ):
-        self.trade_time = trade_time      # 交易时间
-        self.trade_type = trade_type      # 交易类型
-        self.trade_target = trade_target  # 交易对方
-        self.trade_target_account = trade_target_account  # 交易对方账号
-        self.product = product            # 商品
-        self.income_or_expense = income_or_expense  # 收/支
-        self.amount = amount              # 金额(元)
-        self.pay_type = pay_type      # 支付方式
-        self.status = status              # 当前状态
-        self.trade_no = trade_no          # 交易单号
-        self.merchant_no = merchant_no    # 商户单号
-        self.remark = remark              # 备注
-        self.bill_type = bill_type              # 订单类型
+        self.trade_time = datetime.strptime(
+            trade_time, "%Y-%m-%d %H:%M:%S")                # 交易时间
+        self.trade_type = trade_type                        # 交易类型
+        self.trade_target = trade_target                    # 交易对方
+        self.trade_target_account = trade_target_account    # 交易对方账号
+        self.product = product                              # 商品
+        self.income_or_expense = income_or_expense          # 收/支
+        self.amount = amount                                # 金额(元)
+        self.pay_type = pay_type                            # 支付方式
+        self.status = status                                # 当前状态
+        self.trade_no = trade_no                            # 交易单号
+        self.merchant_no = merchant_no                      # 商户单号
+        self.remark = remark                                # 备注
+        self.bill_type = bill_type                          # 订单类型
 
     def from_wx_str(trade_record_str: str, bill_type: str):
         """

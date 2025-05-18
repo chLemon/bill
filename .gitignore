@@ -2,4 +2,8 @@
 /data/*
 !/data/*/
 /data/*/*
+/output/*
+!/output/*/
+/output/*/*
 *.pyc
+__pycache__/

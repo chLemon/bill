@@ -1,8 +1,9 @@
-from TradeRecord import TradeRecord
+from domain.TradeRecord import TradeRecord
 from pathlib import Path
 from datetime import datetime
 
 BILL_TYPE = "支付宝"
+
 
 def read_ali_file(file):
     """
