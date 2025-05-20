@@ -1,6 +1,7 @@
 from datetime import datetime
+from dataclasses import dataclass, field
 
-
+@dataclass
 class TradeRecord:
     """
     交易记录类
@@ -18,10 +19,22 @@ class TradeRecord:
         trade_no (str): 交易单号
         merchant_no (str): 商户单号
         remark (str): 备注
-        sub_record (TradeRecord): 子订单，可选
         bill_type (str): 订单类型
-    交易时间,交易类型,交易对方,商品,收/支,金额(元),支付方式,当前状态,交易单号,商户单号,备注
+        sub_record (TradeRecord): 子订单，可选
     """
+    trade_time: str = field(metadata={"desc": "交易时间"})
+    trade_type: str = field(metadata={"desc": "交易类型"})
+    trade_target: str = field(metadata={"desc": "交易对方"})
+    trade_target_account: str = field(default=None, metadata={"desc": "交易对方账号"})
+    product: str = field(metadata={"desc": "商品"})
+    income_or_expense: str = field(metadata={"desc": "收/支"})
+    amount: str = field(metadata={"desc": "金额(元)"})
+    pay_type: str = field(metadata={"desc": "支付方式"})
+    status: str = field(metadata={"desc": "当前状态"})
+    trade_no: str = field(metadata={"desc": "交易单号"})
+    merchant_no: str = field(metadata={"desc": "商户单号"})
+    remark: str = field(metadata={"desc": "备注"})
+    bill_type: str = field(metadata={"desc": "订单类型"})
 
     def __init__(
         self,

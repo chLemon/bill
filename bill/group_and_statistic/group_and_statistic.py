@@ -1,4 +1,4 @@
-from domain.SheetData import SheetData
+from bill.domain.GroupData import GroupData
 
 
 def group(all_trade_records):
@@ -44,6 +44,6 @@ def group_and_statistic(all_trade_records):
             year_to_month_to_sheet_data[year] = {}
         for month, trade_records in month_to_trade_records.items():
             statistic = do_statistic(trade_records)
-            year_to_month_to_sheet_data[year][month] = SheetData.monthData(
+            year_to_month_to_sheet_data[year][month] = GroupData.monthData(
                 month=month, trade_records=trade_records, statistic=statistic)
     return year_to_month_to_sheet_data
