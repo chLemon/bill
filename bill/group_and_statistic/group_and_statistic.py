@@ -1,4 +1,4 @@
-from bill.domain.GroupData import GroupData
+from domain.GroupData import GroupData
 
 
 def group(all_trade_records):

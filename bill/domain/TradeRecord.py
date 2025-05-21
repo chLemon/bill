@@ -25,7 +25,7 @@ class TradeRecord:
     trade_time: str = field(metadata={"desc": "交易时间"})
     trade_type: str = field(metadata={"desc": "交易类型"})
     trade_target: str = field(metadata={"desc": "交易对方"})
-    trade_target_account: str = field(default=None, metadata={"desc": "交易对方账号"})
+    trade_target_account: str = field(metadata={"desc": "交易对方账号"})
     product: str = field(metadata={"desc": "商品"})
     income_or_expense: str = field(metadata={"desc": "收/支"})
     amount: str = field(metadata={"desc": "金额(元)"})
