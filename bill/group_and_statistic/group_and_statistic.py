@@ -38,12 +38,12 @@ def group_and_statistic(all_trade_records):
     :return: 年份到月份到交易记录的映射
     """
     year_to_month_to_trade_records = group(all_trade_records)
-    year_to_month_to_sheet_data = {}
+    year_to_month_to_group_data = {}
     for year, month_to_trade_records in year_to_month_to_trade_records.items():
-        if year not in year_to_month_to_sheet_data:
-            year_to_month_to_sheet_data[year] = {}
+        if year not in year_to_month_to_group_data:
+            year_to_month_to_group_data[year] = {}
         for month, trade_records in month_to_trade_records.items():
             statistic = do_statistic(trade_records)
-            year_to_month_to_sheet_data[year][month] = GroupData.monthData(
+            year_to_month_to_group_data[year][month] = GroupData.monthData(
                 month=month, trade_records=trade_records, statistic=statistic)
-    return year_to_month_to_sheet_data
+    return year_to_month_to_group_data

@@ -18,6 +18,7 @@ class GroupData:
         self.trade_record_title = trade_record_title
         self.trade_records = trade_records
         self.statistic = statistic
+        self.output_list = []
 
     def monthData(month, trade_records, statistic):
         """
