@@ -1,10 +1,10 @@
-from pathlib import Path
 from datetime import datetime
 
 from domain.TradeRecord import TradeRecord
 
 BILL_TYPE = "微信"
 
+DATA_DIR_PATH = "data/微信"
 
 def read_wx_file(file):
     """

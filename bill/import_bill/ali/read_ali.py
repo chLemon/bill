@@ -1,8 +1,9 @@
 from domain.TradeRecord import TradeRecord
-from pathlib import Path
 from datetime import datetime
 
 BILL_TYPE = "支付宝"
+
+DATA_DIR_PATH = "data/支付宝"
 
 
 def read_ali_file(file):
@@ -10,7 +11,7 @@ def read_ali_file(file):
     读取支付宝账单文件
     return: 账单记录列表，账单时间区间
     """
-    with open(file, 'r', encoding='gb2312') as f:
+    with open(file, 'r', encoding='gbk') as f:
         lines = f.readlines()
         trade_record_str_list = lines[25:]
         time = lines[4]

@@ -1,1 +1,1 @@
-from .read_wechat import read_wx_file, BILL_TYPE
+from .read_wechat import read_wx_file, BILL_TYPE, DATA_DIR_PATH

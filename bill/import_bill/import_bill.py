@@ -2,6 +2,7 @@ from pathlib import Path
 from datetime import datetime, timedelta
 from domain import Bill
 
+
 def read_all_bills():
     """
     读取所有账单
@@ -9,9 +10,9 @@ def read_all_bills():
     """
     all_trade_records = []
     bill_time_range = {}
+    # 读取所有类型的账单数据
     for bill in Bill:
-        trade_records, times = read_trade_records(
-            bill.read_func, Path(bill.data_path))
+        trade_records, times = read_trade_records(bill.read_func, Path(bill.data_path))
         all_trade_records.extend(trade_records)
         bill_time_range[bill.bill_name] = times
     all_trade_records.sort(key=lambda x: x.trade_time)
@@ -66,6 +67,11 @@ def merge_time_range(time_list):
 def time_consistency_check(last_end: datetime, next_start: datetime):
     if last_end >= next_start:
         return True
-    if last_end.hour == 23 and last_end.minute == 59 and last_end.second == 59 and last_end + timedelta(seconds=1) == next_start:
+    if (
+        last_end.hour == 23
+        and last_end.minute == 59
+        and last_end.second == 59
+        and last_end + timedelta(seconds=1) == next_start
+    ):
         return True
     return False
