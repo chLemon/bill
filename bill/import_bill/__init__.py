@@ -1,1 +1,1 @@
-from .import_bill import read_all_bills, read_trade_records
+from .import_bill_func import read_all_bills
