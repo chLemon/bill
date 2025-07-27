@@ -1,0 +1,14 @@
+# 忽略所有 . 开头的文件夹
+**/.*/
+# 忽略 __pycache__
+**/__pycache__
+# 忽略 data 目录下的所有文件，但是保留所有的目录结构
+/data/*
+!/data/*/
+/data/*/*
+# 忽略 output 目录下的所有文件，但是保留所有的目录结构
+/output/*
+!/output/*/
+/output/*/*
+# 忽略所有的 .ipynb 文件
+**/*.ipynb
