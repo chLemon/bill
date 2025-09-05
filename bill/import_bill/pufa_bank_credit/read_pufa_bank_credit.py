@@ -5,6 +5,7 @@ from pypdf import PdfReader
 import re
 
 from domain import PufaCreditTradeRecord
+from domain import IncomeOrExpense
 
 BILL_TYPE = "浦发银行信用卡"
 
@@ -21,11 +22,13 @@ def parse_trade_record(match: str) -> PufaCreditTradeRecord:
     is_expense = match[2].startswith("-")
 
     return PufaCreditTradeRecord(
-        trade_time=match[0],
-        trade_target=match[1],
+        trade_time=datetime.strptime(match[0], "%Y%m%d"),
+        trade_target=match[1].replace("\\n", ""),
         product="",
-        income_or_expense="收入" if is_expense else "支出",
-        amount=match[2][1:] if is_expense else match[2],
+        income_or_expense=(
+            IncomeOrExpense.INCOME if is_expense else IncomeOrExpense.EXPENSE
+        ),
+        amount=float(match[2][1:] if is_expense else match[2]),
         bill_type=BILL_TYPE,
         trade_no=str(match),
     )
@@ -39,18 +42,18 @@ def read_pufa_bank_credit_file(file: Path):
     text = ""
     for page in reader.pages:
         text += page.extract_text()
-    pattern = r"(\d{8}) \d{8} (.*) \d{4} ￥([-]*\d+\.\d+).*"
-    matches = re.findall(pattern, text)
+    pattern = r"(\d{8}) \d{8} (.*?)\d{4} ￥([-]*\d+\.\d+)"
+    matches = re.findall(pattern, text, re.DOTALL)
 
     # 某个月的账单，假设还款日为5日，是从上个月的6日00:00:00，到这个月的5日23:59:59
-    due_date = datetime.strptime(
-        file.name[:6] + str(STATEMENT_DUE_DATE), "%Y%m%d"
-    )
+    due_date = datetime.strptime(file.name[:6] + str(STATEMENT_DUE_DATE), "%Y%m%d")
     end_time = due_date.replace(hour=23, minute=59, second=59)
     start_time = due_date - relativedelta(months=1) + relativedelta(days=1)
 
     return (
-        [parse_trade_record(match) for match in matches],
+        sorted(
+            [parse_trade_record(match) for match in matches], key=lambda x: x.trade_time
+        ),
         start_time,
         end_time,
     )

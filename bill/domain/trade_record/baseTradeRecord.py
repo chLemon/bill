@@ -21,9 +21,10 @@ class BaseTradeRecord(BaseModel):
         income_or_expense (IncomeOrExpense): 收入 / 支出
         amount (float): 金额(元)
         promotion_or_refund_records (list[BaseTradeRecord]): 优惠/退款记录
-        related_records (list[BaseTradeRecord]): 关联记录（主要是如微信支付对应的银行支付记录）
         bill_type (str): 账单类型，是来自微信还是支付宝等
         trade_no (str): 交易单号，订单的唯一标识，如果没有需要生成一个
+
+        related_records (list[BaseTradeRecord]): 关联记录（主要是如微信支付对应的银行支付记录）
     """
 
     trade_time: datetime = Field(description="交易时间")
@@ -34,12 +35,12 @@ class BaseTradeRecord(BaseModel):
     promotion_or_refund_records: list["BaseTradeRecord"] = Field(
         default_factory=list, description="优惠/退款记录"
     )
+    bill_type: str = Field(description="账单类型，是来自微信还是支付宝等")
+    trade_no: str = Field(default="", description="交易单号")
     related_records: list["BaseTradeRecord"] = Field(
         default_factory=list,
         description="关联记录（主要是如微信支付对应的银行支付记录）",
     )
-    bill_type: str = Field(description="账单类型，是来自微信还是支付宝等")
-    trade_no: str = Field(default="", description="交易单号")
 
     @field_validator("trade_time")
     def make_naive(cls, v):

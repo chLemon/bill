@@ -8,13 +8,13 @@ def read_all_bills():
     读取所有账单
     :return: 所有账单记录，账单时间区间
     """
-    all_trade_records = {}
+    all_trade_records = []
     bill_time_range = {}
     # 读取所有类型的账单数据
     for bill in BillType:
         trade_records, times = read_trade_records(bill.read_func, Path(bill.data_path))
         trade_records.sort(key=lambda x: x.trade_time)
-        all_trade_records[bill.bill_type] = trade_records
+        all_trade_records.extend(trade_records)
         bill_time_range[bill.bill_type] = times
     return all_trade_records, bill_time_range
 
